@@ -22,18 +22,29 @@ if app_selection == "Excel to Word Generator":
     st.title("Excel to Word Generator")
 
     # Address Formatting Function
+    import re
+
     def format_address(address):
         """Format the address by:
-           1. Replacing sequences of more than 2 spaces with a newline.
-           2. Replacing the first comma occurrence with a newline.
+           1. Replacing all commas with a newline.
+           2. Replacing sequences of 3 or more spaces with a newline.
+           3. Replacing consecutive newlines with a single newline.
+           4. Adding a newline after "SCHOOL", "Academy", "Vidyalaya", or "HSS" if not already present.
         """
-        # Replace sequences of more than 2 spaces with a newline
+        # Step 1: Replace all commas with a newline
+        address = address.replace(',', '\n')
+        
+        # Step 2: Replace sequences of 3 or more spaces with a newline
         address = re.sub(r' {3,}', '\n', address)  # Matches 3 or more consecutive spaces
-
-        # Replace the first comma occurrence with a newline
-        address = re.sub(r',', '\n', address, 1)  # Only replaces the first comma
-
+        
+        # Step 3: Replace consecutive newlines with a single newline
+        address = re.sub(r'\n+', '\n', address)  # Replaces multiple newlines with a single newline
+        
+        # Step 4: Add a newline after "SCHOOL", "Academy", "Vidyalaya", or "HSS" (case insensitive) if no newline exists
+        address = re.sub(r'(?i)(SCHOOL|Academy|Vidyalaya|HSS)(?!\s*\n)', r'\1\n', address)
+        
         return address.strip()
+
 
 
     # File upload
