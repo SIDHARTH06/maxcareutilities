@@ -9,6 +9,7 @@ import re
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 import os
+import math
 # Sidebar for selecting which tool to use
 st.sidebar.title("Choose Tool")
 app_selection = st.sidebar.radio("Select an option", ("Excel to Word Generator", "School Names Matching Tool"))
@@ -33,16 +34,16 @@ if app_selection == "Excel to Word Generator":
         """
         # Step 1: Replace all commas with a newline
         address = address.replace(',', '\n')
-        
+
         # Step 2: Replace sequences of 3 or more spaces with a newline
         address = re.sub(r' {3,}', '\n', address)  # Matches 3 or more consecutive spaces
-        
+
         # Step 3: Replace consecutive newlines with a single newline
         address = re.sub(r'\n+', '\n', address)  # Replaces multiple newlines with a single newline
-        
+
         # Step 4: Add a newline after "SCHOOL", "Academy", "Vidyalaya", or "HSS" (case insensitive) if no newline exists
         address = re.sub(r'(?i)(SCHOOL|Academy|Vidyalaya|HSS)(?!\s*\n)', r'\1\n', address)
-        
+
         return address.strip()
 
 
@@ -171,7 +172,8 @@ if app_selection == "School Names Matching Tool":
             check_schools = check_df['INSTITUTE'].tolist()
 
             # Find unmatched schools
-            print(input_schools)
+            input_schools = [x for x in input_schools if not (isinstance(x, float) and math.isnan(x) or x == "nan")]
+            check_schools = [x for x in check_schools if not (isinstance(x, float) and math.isnan(x) or x == "nan")]
             unmatched_rows = input_df[~input_df['Name'].apply(lambda x: is_match(x, check_schools, threshold))]
 
             # Save the output file with the same name but with '_processed' suffix
