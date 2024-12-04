@@ -24,17 +24,17 @@ if app_selection == "Excel to Word Generator":
     # Address Formatting Function
     def format_address(address):
         """Format the address by:
-           1. Removing multiple spaces and replacing them with a single space.
-           2. Removing spaces after 'TO' and 'PRINCIPAL' and inserting a newline.
+           1. Replacing sequences of more than 2 spaces with a newline.
+           2. Replacing the first comma occurrence with a newline.
         """
-        # Remove multiple spaces and replace with a single space
-        address = re.sub(r'\s+', ' ', address)  # Replaces all consecutive whitespace with a single space
+        # Replace sequences of more than 2 spaces with a newline
+        address = re.sub(r' {3,}', '\n', address)  # Matches 3 or more consecutive spaces
 
-        # Regex to replace 'TO' and 'PRINCIPAL' followed by spaces with 'TO\n' and 'PRINCIPAL\n'
-        address = re.sub(r"(TO\s+)", r"TO\n", address)  # Replaces TO followed by spaces with TO + newline
-        address = re.sub(r"(PRINCIPAL\s+)", r"PRINCIPAL\n", address)  # Replaces PRINCIPAL followed by spaces with PRINCIPAL + newline
+        # Replace the first comma occurrence with a newline
+        address = re.sub(r',', '\n', address, 1)  # Only replaces the first comma
 
         return address.strip()
+
 
     # File upload
     uploaded_file = st.file_uploader("Upload an Excel File", type=['xlsx'])
