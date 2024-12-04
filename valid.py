@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 import streamlit as st
 import pandas as pd
 from docx import Document
@@ -145,8 +146,9 @@ if app_selection == "Excel to Word Generator":
 if app_selection == "School Names Matching Tool":
     # Function to perform fuzzy matching
     def is_match(school_name, check_schools, threshold):
-        matches = process.extract(school_name, check_schools, scorer=fuzz.ratio)
-        return any(match[1] >= threshold for match in matches)
+        if not isinstance(school_name,float):
+            matches = process.extract(school_name, check_schools, scorer=fuzz.ratio)
+            return any(match[1] >= threshold for match in matches)
 
     st.title('Maxcare India School Names Matching Tool')
 
