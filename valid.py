@@ -171,6 +171,7 @@ if app_selection == "School Names Matching Tool":
             check_schools = check_df['INSTITUTE'].tolist()
 
             # Find unmatched schools
+            print(input_schools)
             unmatched_rows = input_df[~input_df['Name'].apply(lambda x: is_match(x, check_schools, threshold))]
 
             # Save the output file with the same name but with '_processed' suffix
